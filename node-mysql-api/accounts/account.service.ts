@@ -1,4 +1,3 @@
-import config from '../config.json' with { type: 'json' };
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -223,7 +222,7 @@ function basicDetails(account: any) {
 }
 
 async function sendVerificationEmail(account: any, origin: any) {
-    const baseUrl = origin || config.frontendUrl;
+    const baseUrl = origin || process.env.FRONTEND_URL;
     const verifyUrl = `${baseUrl}/account/verify-email?token=${account.verificationToken}`;
     const message = `<p>Please click the below link to verify your email address:</p>
                      <p><a href="${verifyUrl}">${verifyUrl}</a></p>`;
