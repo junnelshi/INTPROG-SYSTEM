@@ -70,8 +70,9 @@ export class AccountService {
     }
 
     resetPassword(token: string, password: string, confirmPassword: string) {
-        return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
-    }
+    const apiRoot = 'https://intprog-system-production.up.railway.app';
+    return this.http.post(`${apiRoot}/accounts/reset-password`, { token, password, confirmPassword });
+}
 
     getAll() {
         return this.http.get<Account[]>(baseUrl);
