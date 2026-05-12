@@ -1,4 +1,4 @@
 export const environment = {
-    production: true,
-    apiUrl: 'https://ipt-2026-backend-w9kn.onrender.com'
+  production: true,
+  apiUrl: 'https://intprog-system.vercel.app'
 };
