@@ -5,7 +5,7 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/angular-21-boilerplate"
+        "distDir": "dist/angular-15-example"
       }
     }
   ],
