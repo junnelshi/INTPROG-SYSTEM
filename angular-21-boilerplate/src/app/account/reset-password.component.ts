@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -26,51 +26,61 @@ export class ResetPasswordComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private cd: ChangeDetectorRef      // <-- ADD THIS
     ) {}
 
     ngOnInit() {
-        this.form = this.formBuilder.group({
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', Validators.required],
-        }, {
-            validator: MustMatch('password', 'confirmPassword')
-        });
+    // Use decodeURIComponent to handle any URL encoding of the token
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token');
 
-        const token = this.route.snapshot.queryParams['token'];
-
-        // remove token from url to prevent http referer leakage
-        this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
-
-        this.accountService.validateResetToken(token)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    this.token = token;
-                    this.tokenStatus = TokenStatus.Valid;
-                },
-                error: () => {
-                    this.tokenStatus = TokenStatus.Invalid;
-                }
-            });
+    if (!token) {
+        token = this.route.snapshot.queryParamMap.get('token');
     }
 
-    // convenience getter for easy access to form fields
+    // Decode in case the token was double-encoded
+    if (token) {
+        token = decodeURIComponent(token);
+    }
+
+    if (!token) {
+        this.tokenStatus = TokenStatus.Invalid;
+        this.cd.detectChanges();
+        this.alertService.error('No reset token provided.');
+        return;
+    }
+
+    this.accountService.validateResetToken(token).subscribe({
+        next: () => {
+            this.token = token!;
+            this.tokenStatus = TokenStatus.Valid;
+            this.cd.detectChanges();
+            this.form = this.formBuilder.group({
+                password: ['', [Validators.required, Validators.minLength(6)]],
+                confirmPassword: ['', Validators.required],
+            }, { validator: MustMatch('password', 'confirmPassword') });
+        },
+        error: (err) => {
+            this.tokenStatus = TokenStatus.Invalid;
+            this.cd.detectChanges();
+            this.alertService.error(err?.error?.message || 'Invalid or expired reset token.');
+        }
+    });
+}
+
     get f() { return this.form.controls; }
 
     onSubmit() {
         this.submitted = true;
-
-        // reset alerts on submit
         this.alertService.clear();
 
-        // stop here if form is invalid
-        if (this.form.invalid) {
+        if (this.form.invalid || !this.token) {
             return;
         }
 
         this.loading = true;
-        this.accountService.resetPassword(this.token!, this.f.password.value, this.f.confirmPassword.value)
+        this.accountService.resetPassword(this.token, this.f.password.value, this.f.confirmPassword.value)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -78,7 +88,7 @@ export class ResetPasswordComponent implements OnInit {
                     this.router.navigate(['../login'], { relativeTo: this.route });
                 },
                 error: error => {
-                    this.alertService.error(error);
+                    this.alertService.error(error?.error?.message || error || 'Password reset failed');
                     this.loading = false;
                 }
             });
