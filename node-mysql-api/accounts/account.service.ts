@@ -80,12 +80,14 @@ async function register(params: any, origin: any) {
     const isFirstAccount = (await db.Account.count()) === 0;
     account.role = isFirstAccount ? Role.Admin : Role.User;
     account.verificationToken = randomTokenString();
-
     account.passwordHash = await hash(params.password);
 
     await account.save();
 
-    await sendVerificationEmail(account, origin);
+    // Send email but don't block if it fails
+    sendVerificationEmail(account, origin).catch(err => {
+        console.error('Email sending failed:', err.message);
+    });
 }
 
 async function verifyEmail({ token }: any) {
