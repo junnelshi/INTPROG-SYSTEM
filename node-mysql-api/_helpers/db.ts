@@ -9,25 +9,13 @@ export default db;
 initialize();
 
 async function initialize() {
-    const host = process.env.DB_HOST || 'localhost';
-    const port = parseInt(process.env.DB_PORT || '3306');
-    const user = process.env.DB_USER || 'root';
-    const password = process.env.DB_PASSWORD || '';
-    const database = process.env.DB_NAME || 'node_mysql_api';
-
-    const connection = await mysql.createConnection({ host, port, user, password });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
-    await connection.end();
-
-    const sequelize = new Sequelize(database, user, password, {
-        host,
-        port,
-        dialect: 'mysql'
-    });
+    const sequelize = new Sequelize(
+        process.env.MYSQL_URL || 'mysql://root:@localhost:3306/node_mysql_api',
+        { dialect: 'mysql' }
+    );
 
     db.Account = accountModel(sequelize);
     db.RefreshToken = refreshTokenModel(sequelize);
-
     db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
     db.RefreshToken.belongsTo(db.Account);
 
