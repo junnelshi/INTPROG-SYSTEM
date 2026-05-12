@@ -9,8 +9,9 @@ export class LayoutComponent {
         private router: Router,
         private accountService: AccountService
     ) {
-        // redirect to home if already logged in
-        if (this.accountService.accountValue) {
+        // only redirect if account is fully loaded and valid
+        const account = this.accountService.accountValue;
+        if (account && account.jwtToken) {
             this.router.navigate(['/']);
         }
     }
