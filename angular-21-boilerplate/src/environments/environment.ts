@@ -1,4 +1,5 @@
+// environment.ts
 export const environment = {
-  production: false,
-  apiUrl: 'https://intprog-system.vercel.app'
+    production: false,
+    apiUrl: 'https://intprog-system.vercel.app'
 };
