@@ -1,19 +1,27 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const SibApiV3Sdk = require('@getbrevo/brevo');
-
-const apiInstance = new SibApiV3Sdk.default.TransactionalEmailsApi();
-apiInstance.setApiKey(SibApiV3Sdk.default.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY!);
-
 export default async function sendEmail({ to, subject, html }: any) {
     console.log('Sending email to:', to);
 
-    const sendSmtpEmail = new SibApiV3Sdk.default.SendSmtpEmail();
-    sendSmtpEmail.to = [{ email: to }];
-    sendSmtpEmail.sender = { email: 'lapisranzjunnel@gmail.com', name: 'INTPROG System' };
-    sendSmtpEmail.subject = subject;
-    sendSmtpEmail.htmlContent = html;
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json',
+            'api-key': process.env.BREVO_API_KEY!,
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            sender: { email: 'lapisranzjunnel@gmail.com', name: 'INTPROG System' },
+            to: [{ email: to }],
+            subject,
+            htmlContent: html
+        })
+    });
 
-    const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log('Email sent successfully:', result.response.statusCode);
+    if (!response.ok) {
+        const error = await response.json();
+        console.error('Email error:', error);
+        throw new Error(error.message);
+    }
+
+    const data = await response.json();
+    console.log('Email sent successfully:', data.messageId);
 }
