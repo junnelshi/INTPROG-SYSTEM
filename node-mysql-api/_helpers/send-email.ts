@@ -1,3 +1,5 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const SibApiV3Sdk = require('@getbrevo/brevo');
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
