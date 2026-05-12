@@ -1,6 +1,6 @@
 {
     "buildCommand": "npm install && npm run build",
-    "outputDirectory": "dist/angular-15-example/browser",
+    "outputDirectory": "dist/angular-15-example",
     "routes": [
         {
             "src": "/(.*)\\.js",
