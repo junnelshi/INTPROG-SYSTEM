@@ -201,7 +201,7 @@ async function hash(password: any) {
 }
 
 function generateJwtToken(account: any) {
-    return jwt.sign({ sub: account.id, id: account.id }, config.secret, { expiresIn: '15m' });
+    return jwt.sign({ sub: account.id, id: account.id }, process.env.JWT_SECRET!, { expiresIn: '15m' });
 }
 
 function generateRefreshToken(account: any, ipAddress: any) {
@@ -255,7 +255,7 @@ async function sendAlreadyRegisteredEmail(email: any, origin: any) {
 }
 
 async function sendPasswordResetEmail(account: any, origin: any) {
-    const baseUrl = origin || config.frontendUrl;
+    const baseUrl = origin || process.env.FRONTEND_URL;
     const resetUrl = `${baseUrl}/account/reset-password?token=${account.resetToken}`;
     const message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                      <p><a href="${resetUrl}">${resetUrl}</a></p>`;
