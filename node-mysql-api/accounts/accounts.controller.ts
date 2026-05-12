@@ -65,7 +65,8 @@ function revokeToken(req: any, res: any, next: any) {
 }
 
 function register(req: any, res: any, next: any) {
-    accountService.register(req.body, req.get('origin'))
+    const origin = req.get('origin') || 'https://intprog-system-3zao.vercel.app';
+    accountService.register(req.body, origin)
         .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
         .catch(next);
 }
@@ -77,7 +78,8 @@ function verifyEmail(req: any, res: any, next: any) {
 }
 
 function forgotPassword(req: any, res: any, next: any) {
-    accountService.forgotPassword(req.body, req.get('origin'))
+    const origin = req.get('origin') || 'https://intprog-system-3zao.vercel.app';
+    accountService.forgotPassword(req.body, origin)
         .then(() => res.json({ message: 'Please check your email for password reset instructions' }))
         .catch(next);
 }
