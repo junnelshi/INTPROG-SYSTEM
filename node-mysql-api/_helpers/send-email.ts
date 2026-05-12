@@ -16,12 +16,12 @@ export default async function sendEmail({ to, subject, html }: any) {
         })
     });
 
+    const data: any = await response.json();
+
     if (!response.ok) {
-        const error = await response.json();
-        console.error('Email error:', error);
-        throw new Error(error.message);
+        console.error('Email error:', data);
+        throw new Error(data.message || 'Email sending failed');
     }
 
-    const data = await response.json();
     console.log('Email sent successfully:', data.messageId);
 }
