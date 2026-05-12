@@ -39,6 +39,12 @@ function authenticate(req: any, res: any, next: any) {
 function refreshToken(req: any, res: any, next: any) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
+
+    // ADD THIS: return empty 200 if no token (unauthenticated pages)
+    if (!token) {
+        return res.status(200).json(null);
+    }
+
     accountService.refreshToken({ token, ipAddress })
         .then(({ refreshToken, ...account }: any) => {
             setTokenCookie(res, refreshToken);

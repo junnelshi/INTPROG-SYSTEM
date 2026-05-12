@@ -1,21 +1,22 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
+    }
+});
 
-export default async function sendEmail({ to, subject, html, from }: any) {
+export default async function sendEmail({ to, subject, html }: any) {
     console.log('Sending email to:', to);
 
-    const { data, error } = await resend.emails.send({
-        from: 'onboarding@resend.dev',
+    const info = await transporter.sendMail({
+        from: `"INTPROG System" <${process.env.GMAIL_USER}>`,
         to,
         subject,
         html
     });
 
-    if (error) {
-        console.error('Email error:', error);
-        throw error;
-    }
-
-    console.log('Email sent successfully:', data);
+    console.log('Email sent successfully:', info.messageId);
 }
