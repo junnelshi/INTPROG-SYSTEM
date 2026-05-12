@@ -1,19 +1,19 @@
 {
   "database": {
-    "host": "turntable.proxy.rlwy.net",
-    "port": 55495,
+    "host": "localhost",
+    "port": 3306,
     "user": "root",
-    "password": "ZiLzrrISWSOekyxbImWirbhCBBuGTYdk",
-    "database": "railway"
+    "password": "",
+    "database": "node_mysql_api"
   },
   "secret": "SUPER_SECRET_KEY_REPLACE_ME_IN_PRODUCTION",
-  "emailFrom": "issac.wolf61@ethereal.email",
+  "emailFrom": "roxanne.weissnat@ethereal.email",
   "smtpOptions": {
     "host": "smtp.ethereal.email",
     "port": 587,
     "auth": {
-      "user": "issac.wolf61@ethereal.email",
-      "pass": "Tbks2SEfPVAFJQsQGd"
+      "user": "roxanne.weissnat@ethereal.email",
+      "pass": "BFxzdgFSWxHDZAfkUt"
     }
   }
 }
