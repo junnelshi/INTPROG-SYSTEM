@@ -1,19 +1,19 @@
 {
   "database": {
-    "host": "turntable.proxy.rlwy.net",
-    "port": 55495,
-    "user": "root",
-    "password": "ZiLzrrISWSOekyxbImWirbhCBBuGTYdk",
+    "host": "your-railway-host",
+    "port": 3306,
+    "user": "your-railway-user",
+    "password": "your-railway-password",
     "database": "railway"
   },
   "secret": "SUPER_SECRET_KEY_REPLACE_ME_IN_PRODUCTION",
-  "emailFrom": "heather.huels@ethereal.email",
+  "emailFrom": "issac.wolf61@ethereal.email",
   "smtpOptions": {
     "host": "smtp.ethereal.email",
     "port": 587,
     "auth": {
-      "user": "heather.huels@ethereal.email",
-      "pass": "awJxfyfxHdJ4rT8cjQ"
+      "user": "issac.wolf61@ethereal.email",
+      "pass": "Tbks2SEfPVAFJQsQGd"
     }
   }
 }
