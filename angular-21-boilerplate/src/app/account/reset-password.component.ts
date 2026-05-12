@@ -27,47 +27,47 @@ export class ResetPasswordComponent implements OnInit {
         private router: Router,
         private accountService: AccountService,
         private alertService: AlertService,
-        private cd: ChangeDetectorRef      // <-- ADD THIS
+        private cd: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
-    // Use decodeURIComponent to handle any URL encoding of the token
-    const urlParams = new URLSearchParams(window.location.search);
-    let token = urlParams.get('token');
+        // Initialize form FIRST before anything else
+        this.form = this.formBuilder.group({
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['', Validators.required],
+        }, { validator: MustMatch('password', 'confirmPassword') });
 
-    if (!token) {
-        token = this.route.snapshot.queryParamMap.get('token');
-    }
+        const urlParams = new URLSearchParams(window.location.search);
+        let token = urlParams.get('token');
 
-    // Decode in case the token was double-encoded
-    if (token) {
-        token = decodeURIComponent(token);
-    }
+        if (!token) {
+            token = this.route.snapshot.queryParamMap.get('token');
+        }
 
-    if (!token) {
-        this.tokenStatus = TokenStatus.Invalid;
-        this.cd.detectChanges();
-        this.alertService.error('No reset token provided.');
-        return;
-    }
+        if (token) {
+            token = decodeURIComponent(token);
+        }
 
-    this.accountService.validateResetToken(token).subscribe({
-        next: () => {
-            this.token = token!;
-            this.tokenStatus = TokenStatus.Valid;
-            this.cd.detectChanges();
-            this.form = this.formBuilder.group({
-                password: ['', [Validators.required, Validators.minLength(6)]],
-                confirmPassword: ['', Validators.required],
-            }, { validator: MustMatch('password', 'confirmPassword') });
-        },
-        error: (err) => {
+        if (!token) {
             this.tokenStatus = TokenStatus.Invalid;
             this.cd.detectChanges();
-            this.alertService.error(err?.error?.message || 'Invalid or expired reset token.');
+            this.alertService.error('No reset token provided.');
+            return;
         }
-    });
-}
+
+        this.accountService.validateResetToken(token).subscribe({
+            next: () => {
+                this.token = token!;
+                this.tokenStatus = TokenStatus.Valid;
+                this.cd.detectChanges();
+            },
+            error: (err) => {
+                this.tokenStatus = TokenStatus.Invalid;
+                this.cd.detectChanges();
+                this.alertService.error(err?.error?.message || 'Invalid or expired reset token.');
+            }
+        });
+    }
 
     get f() { return this.form.controls; }
 
@@ -80,7 +80,7 @@ export class ResetPasswordComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.resetPassword(this.token, this.f.password.value, this.f.confirmPassword.value)
+        this.accountService.resetPassword(this.token, this.f['password'].value, this.f['confirmPassword'].value)
             .pipe(first())
             .subscribe({
                 next: () => {
