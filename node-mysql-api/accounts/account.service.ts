@@ -135,7 +135,12 @@ async function resetPassword({ token, password }: any) {
 }
 
 async function getAll() {
-    const accounts = await db.Account.findAll();
+    const accounts = await db.Account.findAll({
+        order: [
+            ['role', 'ASC'],      
+            ['created', 'ASC']    
+        ]
+    });
     return accounts.map((x: any) => basicDetails(x));
 }
 
