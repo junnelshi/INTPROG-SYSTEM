@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -21,8 +21,7 @@ export class RegisterComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService,
-        private cdr: ChangeDetectorRef
+        private alertService: AlertService
     ) {}
 
     ngOnInit() {
@@ -54,9 +53,10 @@ export class RegisterComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.registered = true;
-                    this.submitting = false;
-                    this.cdr.detectChanges();
+                    setTimeout(() => {
+                        this.registered = true;
+                        this.submitting = false;
+                    }, 0);
                 },
                 error: error => {
                     this.alertService.error(error);
