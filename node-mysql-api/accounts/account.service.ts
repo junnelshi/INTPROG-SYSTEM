@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import sendEmail from '../_helpers/send-email.js';
 import db from '../_helpers/db.js';
 import Role from '../_helpers/role.js';
+import config from '../config.json' with { type: 'json' };
 
 export default {
     authenticate,
@@ -200,7 +201,7 @@ async function hash(password: any) {
 }
 
 function generateJwtToken(account: any) {
-    return jwt.sign({ sub: account.id, id: account.id }, process.env.JWT_SECRET!, { expiresIn: '15m' });
+    return jwt.sign({ sub: account.id, id: account.id }, config.secret, { expiresIn: '15m' });
 }
 
 function generateRefreshToken(account: any, ipAddress: any) {

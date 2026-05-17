@@ -64,15 +64,12 @@ export class AccountService {
     }
 
     validateResetToken(token: string) {
-        const apiRoot = 'https://intprog-system-production.up.railway.app';
-        const url = `${apiRoot}/accounts/validate-reset-token`;
-        return this.http.post(url, { token: token.trim() });
+        return this.http.post(`${baseUrl}/validate-reset-token`, { token: token.trim() });
     }
 
     resetPassword(token: string, password: string, confirmPassword: string) {
-    const apiRoot = 'https://intprog-system-production.up.railway.app';
-    return this.http.post(`${apiRoot}/accounts/reset-password`, { token, password, confirmPassword });
-}
+        return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
+    }
 
     getAll() {
         return this.http.get<Account[]>(baseUrl);
@@ -110,7 +107,6 @@ export class AccountService {
     private refreshTokenTimeout?: any;
 
     private startRefreshTokenTimer() {
-        // Guard: don't run if no account or no jwtToken
         if (!this.accountValue?.jwtToken) return;
 
         const jwtBase64 = this.accountValue.jwtToken.split('.')[1];
