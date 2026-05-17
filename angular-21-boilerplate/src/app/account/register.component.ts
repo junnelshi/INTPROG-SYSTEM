@@ -14,7 +14,6 @@ export class RegisterComponent implements OnInit {
     form!: FormGroup;
     submitting = false;
     submitted = false;
-    registered = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -53,10 +52,8 @@ export class RegisterComponent implements OnInit {
             .pipe(first())
             .subscribe({
                 next: () => {
-                    setTimeout(() => {
-                        this.registered = true;
-                        this.submitting = false;
-                    }, 0);
+                    this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+                    this.router.navigate(['../login'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);
