@@ -9,7 +9,7 @@ export default async function sendEmail({ to, subject, html }: any) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            sender: { email: 'lapisranzjunnel@gmail.com', name: 'INTPROG System' },
+            sender: { email: 'lapisranzjunnel@gmail.com', name: 'Ranz Junnel Lapis' },
             to: [{ email: to }],
             subject,
             htmlContent: html
