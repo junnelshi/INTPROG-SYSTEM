@@ -74,6 +74,10 @@ export class AccountService {
     getAll() {
         return this.http.get<Account[]>(baseUrl);
     }
+    
+    resetIds() {
+    return this.http.post(`${environment.apiUrl}/accounts/reset-ids`, {});
+}
 
     getById(id: string) {
         return this.http.get<Account>(`${baseUrl}/${id}`);

@@ -7,6 +7,7 @@ import Role from '../_helpers/role.js';
 import accountService from './account.service.js';
 
 // routes
+// ✅ CORRECT ORDER
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
@@ -15,15 +16,22 @@ router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
+router.post('/reset-ids', authorize(Role.Admin), resetIds);  // ✅ MOVE HERE
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 
-export default router;
-
 // --- Route Implementations ---
+
+function resetIds(req: any, res: any, next: any) {
+    accountService.resetIds()
+        .then(() => res.json({ 
+            message: 'All accounts and refresh tokens deleted. Auto-increment reset to 1.' 
+        }))
+        .catch(next);
+}
 
 function authenticate(req: any, res: any, next: any) {
     const { email, password } = req.body;

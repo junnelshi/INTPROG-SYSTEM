@@ -7,6 +7,7 @@ import db from '../_helpers/db.js';
 import Role from '../_helpers/role.js';
 import config from '../config.json' with { type: 'json' };
 
+
 export default {
     authenticate,
     refreshToken,
@@ -20,7 +21,8 @@ export default {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    resetIds  // <-- ADD THIS
 };
 
 async function authenticate({ email, password, ipAddress }: any) {
@@ -271,4 +273,14 @@ await sendEmail({
         html: `<h4>Reset Password Email</h4>
                ${message}`
     });
+}
+
+async function resetIds() {
+    const sequelize = db.Account.sequelize;
+
+    // Must truncate refreshtokens first due to foreign key constraint
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await sequelize.query('TRUNCATE TABLE `refreshtokens`');
+    await sequelize.query('TRUNCATE TABLE `accounts`');
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 }
