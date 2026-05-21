@@ -22,7 +22,7 @@ export default {
     create,
     update,
     delete: _delete,
-    resetIds  // <-- ADD THIS
+    resetIds  
 };
 
 async function authenticate({ email, password, ipAddress }: any) {
@@ -278,9 +278,8 @@ await sendEmail({
 async function resetIds() {
     const sequelize = db.Account.sequelize;
 
-    // Must truncate refreshtokens first due to foreign key constraint
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-    await sequelize.query('TRUNCATE TABLE `refreshtokens`');
+    await sequelize.query('TRUNCATE TABLE `refreshTokens`');
     await sequelize.query('TRUNCATE TABLE `accounts`');
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 }
