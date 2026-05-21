@@ -16,13 +16,13 @@ router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
-router.post('/reset-ids', authorize(Role.Admin), resetIds);  // ✅ MOVE HERE
+router.post('/reset-ids', authorize(Role.Admin), resetIds);  
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
-
+export default router;
 // --- Route Implementations ---
 
 function resetIds(req: any, res: any, next: any) {
